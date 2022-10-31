@@ -34,4 +34,18 @@ module.exports = {
             return res.status(status.UNPROCESSABLE_ENTITY).json(apiResponseValidationError(e));
         }
     },
+    loginValidation: (req, res, next) => {
+        const schema = Joi.object({
+            email: Joi.string().email().max(255).required()
+                .label('Email'),
+            password: Joi.string().required().label('Password'),
+        });
+
+        const { error } = schema.validate(req.body, options);
+        if (error) {
+            return res.status(status.UNPROCESSABLE_ENTITY).json(apiResponseValidationError(error));
+        }
+
+        next();
+    },
 };
