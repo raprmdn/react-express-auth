@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosAuth from "./apiAuth";
 
 const URL = "http://localhost:5000";
 
@@ -22,6 +23,14 @@ export const loginAPI = async (user) => {
             email: user.email,
             password: user.password,
         });
+    } catch (e) {
+        throw e;
+    }
+};
+
+export const profileAPI = async () => {
+    try {
+        return await axiosAuth.get(`${URL}/api/auth/me`);
     } catch (e) {
         throw e;
     }

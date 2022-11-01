@@ -8,6 +8,7 @@ import Register from "./pages/register/Register";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/dashboard/Dashboard";
 import RequireAuth from "./components/RequireAuth";
+import Profile from "./pages/profile/Profile";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                        {/* Protected Route */}
                       <Route element={<RequireAuth />}>
                           <Route path="/dashboard" element={<Dashboard />} />
+                          <Route path="/profile" element={<Profile />} />
                       </Route>
                    </Route>
                </Routes>

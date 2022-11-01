@@ -28,6 +28,9 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.isError = false;
             state.isSuccess = false;
+        },
+        setAccessToken: (state, action) => {
+            state.data.accessToken = action.payload;
         }
     },
     extraReducers: {
@@ -50,7 +53,7 @@ const authSlice = createSlice({
     }
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, setAccessToken } = authSlice.actions;
 
 export default authSlice.reducer;
 

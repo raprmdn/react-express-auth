@@ -38,7 +38,9 @@ const Navigation = () => {
                         {
                             user && (
                                 <NavDropdown title={user.name} id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
+                                    <LinkContainer to={'/profile'}>
+                                        <NavDropdown.Item>Profile</NavDropdown.Item>
+                                    </LinkContainer>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item onClick={logoutHandler}>
                                         Logout
