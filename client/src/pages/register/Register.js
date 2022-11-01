@@ -23,7 +23,6 @@ const Signup = () => {
             toast.success(response.data.message);
             navigate('/login');
         } catch (e) {
-            console.log(e);
             if (e.response.data.code === 422) setEntityErrors(e.response.data.errors);
             if (e.response.data.code === 500) toast.error(e.response.data.message);
         }

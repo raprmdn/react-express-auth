@@ -1,15 +1,36 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../features/authSlice";
+import toast from "react-hot-toast";
 import './Login.css';
 import { Link } from "react-router-dom";
 
 const Login = () => {
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
+    const [ entityErrors, setEntityErrors ] = useState({});
+    const { isLoading } = useSelector(state => state.auth);
 
-    const submitHandler = (e) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const submitHandler = async (e) => {
         e.preventDefault();
-    }
+        try {
+            const user = { email, password };
+            await dispatch(login(user)).unwrap()
+                .then((data) => {
+                    toast.success(data.message);
+                    navigate('/dashboard');
+                });
+        } catch (e) {
+            if (e.code === 422) setEntityErrors(e.errors);
+            if (e.code === 400) setEntityErrors({ email: e.message });
+            if (e.code === 500) toast.error(`${e.code} ${e.status}`);
+        }
+    };
 
     return (
         <Container>
@@ -21,21 +42,25 @@ const Login = () => {
                         <Form.Group className="mb-4" controlId="formBasicEmail">
                             <Form.Label>Email</Form.Label>
                             <Form.Control type="email"
+                                          className={entityErrors.email ? 'is-invalid' : ''}
                                           name="email"
                                           value={email}
                                           onChange={(e) => setEmail(e.target.value)}
                                           placeholder="Enter email" />
+                            { entityErrors.email && <div className="invalid-feedback">{entityErrors.email}</div> }
                         </Form.Group>
                         <Form.Group className="mb-4" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password"
+                                          className={entityErrors.password ? 'is-invalid' : ''}
                                           name="password"
                                           value={password}
                                           onChange={(e) => setPassword(e.target.value)}
                                           placeholder="Password" />
+                            { entityErrors.password && <div className="invalid-feedback">{entityErrors.password}</div> }
                         </Form.Group>
 
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" disabled={isLoading}>
                             Login
                         </Button>
 

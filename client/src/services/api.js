@@ -14,4 +14,15 @@ export const registerAPI = async (user) => {
     } catch (e) {
         throw e;
     }
-}
+};
+
+export const loginAPI = async (user) => {
+    try {
+        return await axios.post(`${URL}/api/auth/login`, {
+            email: user.email,
+            password: user.password,
+        });
+    } catch (e) {
+        throw e;
+    }
+};
