@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../features/authSlice";
+import { login, selectCurrentUser } from "../../features/authSlice";
 import toast from "react-hot-toast";
 import './Login.css';
 import { Link } from "react-router-dom";
@@ -12,9 +12,14 @@ const Login = () => {
     const [ password, setPassword ] = useState('');
     const [ entityErrors, setEntityErrors ] = useState({});
     const { isLoading } = useSelector(state => state.auth);
+    const user = useSelector(selectCurrentUser);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) navigate('/dashboard');
+    }, [user]);
 
     const submitHandler = async (e) => {
         e.preventDefault();
