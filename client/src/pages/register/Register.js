@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../features/authSlice";
 import { useNavigate } from "react-router-dom";
 import { registerAPI } from "../../services/api";
 import './Register.css';
@@ -13,7 +15,13 @@ const Signup = () => {
     const [ password, setPassword ] = useState('');
     const [ passwordConfirmation, setPasswordConfirmation ] = useState('');
     const [ entityErrors, setEntityErrors ] = useState({});
+    const user = useSelector(selectCurrentUser);
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) navigate('/dashboard');
+    }, [user]);
 
     const submitHandler = async (e) => {
         e.preventDefault();
