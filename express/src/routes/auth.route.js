@@ -10,4 +10,6 @@ router.post('/register', registerValidation, AuthController.register);
 router.get('/me', authentication, AuthController.me);
 router.post('/refresh-token', refreshToken, AuthController.refreshToken);
 
+router.post('/login/google', AuthController.googleLogin);
+
 module.exports = router;

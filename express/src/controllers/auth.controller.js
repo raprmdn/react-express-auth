@@ -33,4 +33,12 @@ module.exports = {
             return res.status(e.code).json(e);
         }
     },
+    googleLogin: async (req, res) => {
+        try {
+            const serviceResponse = await AuthService.googleLogin(req);
+            return res.status(serviceResponse.code).json(serviceResponse);
+        } catch (e) {
+            return res.status(e.code).json(e);
+        }
+    },
 };

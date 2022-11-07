@@ -28,6 +28,10 @@ module.exports = {
                 allowNull: false,
                 defaultValue: 'local',
             },
+            provider_id: {
+                type: Sequelize.STRING,
+                allowNull: true,
+            },
             password: {
                 type: Sequelize.STRING,
                 allowNull: false,
