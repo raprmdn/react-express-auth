@@ -2,7 +2,7 @@ import axios from "axios";
 import { store } from "../app/store";
 import { reset, setAccessToken } from "../features/authSlice";
 
-const URL = "http://localhost:5000";
+const URL = process.env.REACT_APP_SERVER_URL || "http://localhost:5000";
 
 const instance = axios.create({
     baseURL: URL,

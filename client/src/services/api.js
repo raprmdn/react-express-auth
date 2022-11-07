@@ -1,7 +1,7 @@
 import axios from "axios";
 import axiosAuth from "./apiAuth";
 
-const URL = "http://localhost:5000";
+const URL = process.env.REACT_APP_SERVER_URL || "http://localhost:5000";
 
 export const registerAPI = async (user) => {
     try {
