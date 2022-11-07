@@ -28,6 +28,16 @@ export const loginAPI = async (user) => {
     }
 };
 
+export const loginGoogleAPI = async (credential) => {
+    try {
+        return await axios.post(`${URL}/api/auth/login/google`, {
+            credential,
+        });
+    } catch (e) {
+        throw e;
+    }
+};
+
 export const profileAPI = async () => {
     try {
         return await axiosAuth.get(`${URL}/api/auth/me`);

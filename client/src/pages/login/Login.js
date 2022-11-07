@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login, selectCurrentUser } from "../../features/authSlice";
+import { login, selectCurrentUser, loginGoogle } from "../../features/authSlice";
 import toast from "react-hot-toast";
 import './Login.css';
 import { Link } from "react-router-dom";
@@ -21,6 +21,19 @@ const Login = () => {
         if (user) navigate('/dashboard');
     }, [user]);
 
+    useEffect(() => {
+        /* global google */
+        google?.accounts.id.initialize({
+            client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+            callback: googleHandler,
+        });
+
+        google?.accounts.id.renderButton(
+            document.getElementById('google-signin'),
+            { theme: "outline", size: "large", width: 200 },
+        )
+    }, []);
+
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
@@ -32,6 +45,20 @@ const Login = () => {
                 });
         } catch (e) {
             if (e.code === 422) setEntityErrors(e.errors);
+            if (e.code === 400) setEntityErrors({ email: e.message });
+            if (e.code === 500) toast.error(`${e.code} ${e.status}`);
+        }
+    };
+
+    const googleHandler = async (response) => {
+        try {
+            await dispatch(loginGoogle(response.credential)).unwrap()
+                .then((data) => {
+                    toast.success(data.message);
+                    navigate('/dashboard');
+                });
+        } catch (e) {
+            console.log(e);
             if (e.code === 400) setEntityErrors({ email: e.message });
             if (e.code === 500) toast.error(`${e.code} ${e.status}`);
         }
@@ -65,7 +92,7 @@ const Login = () => {
                             { entityErrors.password && <div className="invalid-feedback">{entityErrors.password}</div> }
                         </Form.Group>
 
-                        <Button variant="primary" type="submit" disabled={isLoading}>
+                        <Button variant="primary" type="submit" id="login-btn" disabled={isLoading}>
                             Login
                         </Button>
 
@@ -74,6 +101,14 @@ const Login = () => {
                                 <small>
                                     Doesn't have an account ? <Link to={'/register'} className="text-decoration-none">Sign Up</Link>
                                 </small>
+                                <div className="my-3">
+                                    <small>
+                                        OR
+                                    </small>
+                                </div>
+                                <div className="d-flex align-items-center justify-content-center">
+                                    <div id="google-signin"></div>
+                                </div>
                             </div>
                         </div>
                     </Form>

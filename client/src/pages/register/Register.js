@@ -3,7 +3,8 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../features/authSlice";
+import { loginGoogle, selectCurrentUser } from "../../features/authSlice";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerAPI } from "../../services/api";
 import './Register.css';
@@ -18,10 +19,24 @@ const Signup = () => {
     const user = useSelector(selectCurrentUser);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (user) navigate('/dashboard');
     }, [user]);
+
+    useEffect(() => {
+        /* global google */
+        google?.accounts.id.initialize({
+            client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+            callback: googleHandler,
+        });
+
+        google?.accounts.id.renderButton(
+            document.getElementById('google-signin'),
+            { theme: "outline", size: "large", width: 200 },
+        )
+    }, []);
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -34,7 +49,21 @@ const Signup = () => {
             if (e.response.data.code === 422) setEntityErrors(e.response.data.errors);
             if (e.response.data.code === 500) toast.error(e.response.data.message);
         }
-    }
+    };
+
+    const googleHandler = async (response) => {
+        try {
+            await dispatch(loginGoogle(response.credential)).unwrap()
+                .then((data) => {
+                    toast.success(data.message);
+                    navigate('/dashboard');
+                });
+        } catch (e) {
+            console.log(e);
+            if (e.code === 400) setEntityErrors({ email: e.message });
+            if (e.code === 500) toast.error(`${e.code} ${e.status}`);
+        }
+    };
 
     return (
         <Container>
@@ -103,6 +132,14 @@ const Signup = () => {
                                 <small>
                                     Already have an account ? <Link to={'/login'} className="text-decoration-none">Login</Link>
                                 </small>
+                                <div className="my-3">
+                                    <small>
+                                        OR
+                                    </small>
+                                </div>
+                                <div className="d-flex align-items-center justify-content-center">
+                                    <div id="google-signin"></div>
+                                </div>
                             </div>
                         </div>
                     </Form>
