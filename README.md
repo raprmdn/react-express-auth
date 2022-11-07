@@ -2,7 +2,7 @@
 
 This is a simple example of how to use React with Express to create a simple authentication system.
 
-Authentication is done using JSON Web Tokens (JWT), Google OAuth2 using the newest [gsi](https://developers.google.com/identity/gsi/web/guides/overview).
+Authentication is done using JSON Web Tokens (JWT), Google OAuth2 using [gsi](https://developers.google.com/identity/gsi/web/guides/overview).
 
 ## Getting Started
 
@@ -66,3 +66,7 @@ npm run dev
 ```
 
 ## Screenshots application
+![sign-with-google](https://user-images.githubusercontent.com/71953516/200273130-c2978854-9e4b-495e-82d6-cea82eff7a13.jpg)
+![sign-with-google-2](https://user-images.githubusercontent.com/71953516/200273190-55321be1-3bed-4e48-8be5-d3eb7b719d1d.jpg)
+![sign-with-google-3](https://user-images.githubusercontent.com/71953516/200273209-aa647cb3-c641-4231-ae69-e037a5a1a4fa.jpg)
+
