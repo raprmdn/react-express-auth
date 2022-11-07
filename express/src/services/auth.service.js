@@ -78,7 +78,6 @@ module.exports = {
                 audience: process.env.GOOGLE_CLIENT_ID,
             });
             const payload = ticket.getPayload();
-            console.log(payload);
 
             const user = await User.findOne({ where: { email: payload.email } });
             if (!user) {
@@ -97,7 +96,16 @@ module.exports = {
                 const refreshToken = generateRefreshToken(newUser);
                 newUser.password = undefined;
 
-                return apiResponse(status.OK, 'OK', 'Success login', { user: newUser, accessToken, refreshToken });
+                return apiResponse(status.OK, 'OK', 'Success login', {
+                    user: {
+                        id: newUser.id,
+                        name: newUser.name,
+                        username: newUser.username,
+                        email: newUser.email,
+                    },
+                    accessToken,
+                    refreshToken
+                });
             }
 
             if (user.provider !== 'google')
@@ -107,7 +115,16 @@ module.exports = {
             const refreshToken = generateRefreshToken(user);
             user.password = undefined;
 
-            return apiResponse(status.OK, 'OK', 'Success login', { user, accessToken, refreshToken });
+            return apiResponse(status.OK, 'OK', 'Success login', {
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    username: user.username,
+                    email: user.email,
+                },
+                accessToken,
+                refreshToken
+            });
         } catch (e) {
             throw apiResponse(e.code || status.INTERNAL_SERVER_ERROR, e.status || 'INTERNAL_SERVER_ERROR', e.message);
         }
